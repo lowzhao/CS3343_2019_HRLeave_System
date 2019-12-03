@@ -1,43 +1,40 @@
 package main;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
+import java.util.Scanner;
 
-public class Main extends Application {
+import user.User;
+
+//import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+public class Main{
 	
-	Button button;
 	
 	public static void main(String[] args) {
-		System.out.println("Hello Galen.");
-		launch(args); // setup app as java application;
+		
+		Backend backend = Backend.getInstance();
+		Frontend frontend = Frontend.getInstance();
+		
+		frontend.start();
+		
+		frontend.addObserver(backend);
+		
+//		test_input();
 		
 	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Leave System.");
+	
+	
+	public static void test_input() {
+		Scanner scanner = new Scanner(System.in);
 		
-		// Stage -> Scene -> Layout -> Buttons, blahblah.....
+	 	System.out.println("Enter username: ");
+		String username = scanner.nextLine();
 		
-		// creating layout
+		System.out.println("Enter password: ");
+		String password = scanner.nextLine();
 		
-		
-		button = new Button();
-		button.setText("Click me.");
-		
-		StackPane layout = new StackPane();
-		layout.getChildren().add(button);
-		
-		Scene scene = new Scene(layout, 1000, 1000);
-		primaryStage.setScene(scene);
-		
-		primaryStage.show();
-		
+//		if (User.login(username, password)) {
+//			User main_user = new User();
+//		}
 	}
 	
 }
