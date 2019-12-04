@@ -6,4 +6,4 @@ CS3343 project
 	- on mac: `brew services start mysql`
 	- on windows: `C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld`  # your version could be different change accordingly; If you have path setup then use `mysqld`
 	- database data is on: `SQL/database`
-	- `mysqldump -u root -p cs3343db > ./SQL/database/cs3343db.sql`
+	<!-- - `mysqldump -u root -p cs3343db > ./SQL/database/cs3343db.sql` -->

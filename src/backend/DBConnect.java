@@ -65,8 +65,9 @@ public class DBConnect {
 	public String[] getUserAuthInfo(String username) throws SQLException, NoResultException {
 		try {
 			return this.executeAndFetch(
-					String.format("SELECT password, salt FROM User WHERE username=%s;", username),
+					String.format("SELECT password, salt FROM Employee WHERE username=\"%s\";", username),
 					new String[] {"password","salt"}
+					
 			).get(0);
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println(e);
@@ -76,7 +77,7 @@ public class DBConnect {
 	
 	public void insertUser(String name, Date dateJoined, String username, BigInteger salt, BigInteger password,boolean isManager) throws SQLException {
 		Statement st = con.createStatement();
-		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager) VALUES (%s,%s,%s,%d,%d, %b)",name ,Date2Str(dateJoined), username,salt, password,isManager));
+		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager) VALUES (\"%s\",\"%s\",\"%s\",%d,%d, %b);",name ,Date2Str(dateJoined), username,salt, password,isManager));
 	}
 	
 	public static String Date2Str(Date d) {

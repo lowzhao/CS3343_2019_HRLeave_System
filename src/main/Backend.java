@@ -25,12 +25,14 @@ public class Backend{
 		// Displaying the thread that is running 
         System.out.println ("Backend started");
 
+        
 		// Connect DB
 		this.con = new DBConnect();
 		
 		// Open for request;
 		try {
-			this.insert_user("","Ella","123","name",10,new Date(),false);
+//			this.insert_user("","Ella","123","Ella Wong",21,new Date(),false);
+//			System.out.println(this.authenticate_login_user("Ella","1233"));
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -45,6 +47,10 @@ public class Backend{
 			System.out.println(e);
 		}
 		return false;
+	}
+	
+	public boolean dummy_insert_user(String username, String password) throws Exception {
+		return this.insert_user("", username, password, "namamamam", 12, new Date(), false);
 	}
 	
 	public boolean insert_user(String session,String username, String password, String name, int age, Date dateJoined, boolean isManager) throws Exception {
