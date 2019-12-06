@@ -8,3 +8,7 @@ CS3343 project
 	- database data is on: `SQL/database`
 	- `mysqldump` is a command to push this data into the sql db. E.g. `mysqldump -u root -p cs3343db > ./SQL/database/cs3343db.sql` # your username might not be root, change accordingly. And cs3343db is the database of this project.
 2. Java installed
+3. Java MySQL Lib:
+   1. download and unzip https://dev.mysql.com/downloads/connector/j/
+   2. in eclipse right click project and add to library `Build Path` > `Add External Archives...`;
+   3. choose the `.jar` file.
