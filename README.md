@@ -13,3 +13,7 @@ CS3343 project
    1. download and unzip https://dev.mysql.com/downloads/connector/j/ (Choose `Platform Independent`)
    2. in eclipse right click project and add to library `Build Path` > `Add External Archives...`;
    3. choose the `.jar` file.
+4. JavaFX installation: (JDK >= 11)
+   1. download and unzip https://openjfx.io/ 
+   2. in eclipse right click project and add to library `Build Path` > `Add External Archives...`;
+   3. choose all `.jar` file.
