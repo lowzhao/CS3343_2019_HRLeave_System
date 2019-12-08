@@ -1,20 +1,20 @@
 package main;
 
+import java.util.Calendar;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import ui.App;
+import ui.Presentation;
 
 public class Frontend extends Thread {
 
 	private static Frontend instance;
 
 	public static Frontend getInstance() {
-		System.out.println(instance);
 		if (instance == null) {
 			instance = new Frontend(new String[0]);
 		}
-		System.out.println(instance);
 		return instance;
 	}
 
@@ -23,11 +23,17 @@ public class Frontend extends Thread {
 		
 	}
 
-	private App app;
+	private Presentation app;
 
 	private String[] args;
 
 	private Backend observer;
+	
+	private String username;
+	private String password;
+	private int eid;
+	private String sessionId;
+	private boolean authenticated = false;
 
 	@Override
 	public void run() 
@@ -35,7 +41,7 @@ public class Frontend extends Thread {
 		try {
 			// Displaying the thread that is running
 			System.out.println("Frontend is starting at thread: " + Thread.currentThread().getId());
-			App.start(this.args);
+			Presentation.start(this.args);
 
 		} catch (Exception e) {
 			// Throwing an exception
@@ -47,8 +53,16 @@ public class Frontend extends Thread {
 		this.observer = be;
 	}
 
-	public boolean authUser(String username, String password) {
-		return this.observer.authenticate_login_user(username, password);
+	public boolean authenticate_login_user(String username, String password) {
+		this.username = username;
+		this.password = password;
+		Backend.AuthState authState = this.observer.authenticate_login_user(username, password);
+
+		this.eid = authState.eid;
+		this.sessionId = authState.sessionId;
+		this.authenticated = authState.authenticated;
+		
+		return authState.authenticated;
 	}
 	
 	public boolean dummy_insertUser(String username, String password) {
@@ -59,6 +73,23 @@ public class Frontend extends Thread {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public boolean insertUser(String username, String password, String name, int age, boolean isManager) {
+		try {
+			return this.observer.insert_user(username, password,name,age,isManager);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
+	public boolean loggedIn() {
+		return this.authenticated;
+	}
+
+	public void logout() {
+		this.authenticated = false;
 	}
 
 }
