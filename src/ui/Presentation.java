@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.Calendar;
+
 import events.EventLogout;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -19,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import main.Frontend;
+import user.Employee;
 
 public class Presentation extends Application {
 
@@ -41,14 +44,14 @@ public class Presentation extends Application {
 	private TextField username;
 	private TextField password;
 	private Stage ps;
-	
+
 	private EventLogout eventLogout = new EventLogout(null);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
 		this.fe = Frontend.getInstance();
-		
+
 		this.ps = primaryStage;
 		primaryStage.setTitle("CS3343 HR Leave System.");
 
@@ -96,12 +99,29 @@ public class Presentation extends Application {
 	}
 
 	public void goHomePage() {
-		PaneHomePage p = new PaneHomePage();
-		p.getEventPageLogin().setPresentation(this);
+		PaneHomePage p = new PaneHomePage(this.fe.getCurrUser(), this.fe.getUserOnLeaveToday());
+		p.getEventPageTakeLeave().setPresentation(this);
+		p.getEventPageManageLeave().setPresentation(this);
 		this.ps.setScene(createScene(p));
 		this.ps.show();
 	}
-	
+
+	public void goTakeLeavePage() {
+		PaneTakeLeave p = new PaneTakeLeave();
+		p.getEventPageHomePage().setPresentation(this);
+		p.getEventTakeLeave().setPresentation(this);
+		this.ps.setScene(createScene(p));
+		this.ps.show();
+	}
+
+	public void goManageLeavePage() {
+		PaneManageLeave p = new PaneManageLeave();
+		p.getEventPageHomePage().setPresentation(this);
+		p.getEventTakeLeave().setPresentation(this);
+		this.ps.setScene(createScene(p));
+		this.ps.show();
+	}
+
 	public void login(String username, String password) {
 		if (fe.authenticate_login_user(username, password)) {
 			this.goHomePage();
@@ -110,8 +130,9 @@ public class Presentation extends Application {
 		}
 	}
 
-	public void signUp(String username, String password, String preferredName, int age, boolean isManager) {
-		if (fe.insertUser(username, password, preferredName, age, isManager)) {
+	public void signUp(String username, String password, String preferredName, int age, boolean isManager,
+			boolean isSenior) {
+		if (fe.insertUser(username, password, preferredName, age, isManager, isSenior)) {
 			alertMessage("Success.", "Account Created Success");
 			this.goLoginPage();
 		} else {
@@ -147,7 +168,7 @@ public class Presentation extends Application {
 
 	public void addStackPane(HBox hb) {
 		StackPane stack = new StackPane();
-		
+
 		Button logoutButton = new Button("Logout");
 		logoutButton.setOnAction(this.eventLogout);
 		this.eventLogout.setPresentation(this);
@@ -158,10 +179,16 @@ public class Presentation extends Application {
 		hb.getChildren().add(stack); // Add to HBox from Example 1-2
 		HBox.setHgrow(stack, Priority.ALWAYS); // Give stack any extra space
 	}
-	
+
 	public void logout() {
 		this.fe.logout();
 		this.goLoginPage();
+	}
+
+	public void takeLeave(Calendar startDate, Calendar endDate) {
+		
+		Employee x = ((Employee) this.fe.getCurrUser());
+//		x.applyLeave("annual", 0, startDate, endDate);
 	}
 
 //	public void addStackPane(HBox hb) {

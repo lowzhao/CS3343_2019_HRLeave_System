@@ -1,11 +1,10 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import ui.Presentation;
+import user.User;
 
 public class Frontend extends Thread {
 
@@ -35,6 +34,9 @@ public class Frontend extends Thread {
 	private String sessionId;
 	private boolean authenticated = false;
 
+	private User currentUser; 
+	
+	private ArrayList<String> userOnLeaveToday = new ArrayList(); 
 	@Override
 	public void run() 
     { 
@@ -75,9 +77,16 @@ public class Frontend extends Thread {
 		return false;
 	}
 	
-	public boolean insertUser(String username, String password, String name, int age, boolean isManager) {
+	public boolean insertUser(
+			String username, 
+			String password, 
+			String name, 
+			int age, 
+			boolean isManager,
+			boolean isSenior
+		) {
 		try {
-			return this.observer.insert_user(username, password,name,age,isManager);
+			return this.observer.insert_user(username, password,name,age,isManager,isSenior);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -90,6 +99,29 @@ public class Frontend extends Thread {
 
 	public void logout() {
 		this.authenticated = false;
+	}
+
+	public boolean isManager() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public User getCurrUser() {
+		this.currentUser = this.observer.getUser(this.eid);
+		return this.currentUser;
+	}
+	
+	public User getUser(int eid) {
+		return this.observer.getUser(eid);
+	}
+	
+	public ArrayList<String> getUserOnLeaveToday(){
+		this.userOnLeaveToday = this.getUserOnLeave(Calendar.getInstance());
+		return this.userOnLeaveToday;
+	}
+	
+	public ArrayList<String> getUserOnLeave(Calendar d) {
+		return this.observer.getUserOnLeave(d);
 	}
 
 }

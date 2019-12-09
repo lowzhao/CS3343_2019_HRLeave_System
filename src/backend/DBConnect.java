@@ -91,9 +91,9 @@ public class DBConnect {
 		}
 	}
 	
-	public void insertUser(String name, Calendar dateJoined, String username, String salt, String password,boolean isManager) throws SQLException {
+	public void insertUser(String name, Calendar dateJoined, String username, String salt, String password,boolean isManager, boolean isSenior) throws SQLException {
 		Statement st = con.createStatement();
-		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager) VALUES (\"%s\",\"%s\",\"%s\",\"%s\",\"%s\", %b);",name ,Converters.calendar2Str(dateJoined), username,salt, password,isManager));
+		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager,isSenior) VALUES (\"%s\",\"%s\",\"%s\",\"%s\",\"%s\", %b, %b);",name ,Converters.calendar2Str(dateJoined), username,salt, password,isManager,isSenior));
 	}
 	
 	public void insertSession(int eid, String sid, Calendar expiry_date) throws SQLException {
@@ -109,5 +109,29 @@ public class DBConnect {
 	public void removeSession(String sid) throws SQLException {
 		Statement st = con.createStatement();
 		st.executeUpdate(String.format("DELETE FROM Session WHERE sid=\"%s\";", sid));
+	}
+	
+	public Object[] getUser(int eid) throws SQLException, NoResultException{
+		try {
+			String[] rawRes = this.executeAndFetch(
+					String.format("SELECT name, age, dateJoined, username, isManager, isSenior FROM Employee WHERE eid=%s;", eid),
+					new String[] {"name","age","dateJoined","username","isManager", "isSenior"}
+			).get(0);
+			return new Object[]{ 
+					rawRes[0], 
+					Integer.parseInt(rawRes[1]), 
+					Converters.str2Calendar(rawRes[2]), 
+					rawRes[3], 
+					Converters.str2Bool(rawRes[4])  ,
+					Converters.str2Bool(rawRes[5])
+				};
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e);
+			throw new NoResultException("User don't exist.");
+		}
+	}
+
+	public int getAnnualLeaveCount() {
+		return 0;
 	}
 }

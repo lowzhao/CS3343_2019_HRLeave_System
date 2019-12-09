@@ -21,6 +21,7 @@ public class PaneSignUp extends VBox {
 	private TextField preferredNameField;
 	private TextField ageField;
 	private RadioButton isManagerRadio;
+	private RadioButton isSeniorRadio;
 
 	private EventSignUp eventSignUp = new EventSignUp(this);
 	private EventPageLogin eventPageLogin = new EventPageLogin(this);
@@ -58,6 +59,9 @@ public class PaneSignUp extends VBox {
 		// add isManager
 		this.isManagerRadio = new RadioButton("Are you manager?");
 		this.getChildren().add(this.isManagerRadio);
+		
+		this.isSeniorRadio = new RadioButton("Are you senior employee?");
+		this.getChildren().add(this.isSeniorRadio);
 
 		// add buttons
 		this.getChildren().add(actionButtons());
@@ -104,6 +108,10 @@ public class PaneSignUp extends VBox {
 	
 	public boolean getIsManager() {
 		return isManagerRadio.isSelected();
+	}
+	
+	public boolean getIsSenior() {
+		return isSeniorRadio.isSelected();
 	}
 	
 	public EventSignUp getEventSignUp() {
