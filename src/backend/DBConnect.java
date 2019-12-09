@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import exception.NoResultException;
+import user.Leave;
 import util.Converters;
 
 public class DBConnect {
@@ -133,5 +134,17 @@ public class DBConnect {
 
 	public int getAnnualLeaveCount() {
 		return 0;
+	}
+	
+	public boolean insertLeave(ArrayList<Leave> leaves) {
+		try {
+			for (Leave leave : leaves) {
+				Statement st = con.createStatement();
+				st.executeUpdate(String.format("INSERT INTO onLeave (eid, leave_date, leave_type, type)  VALUES (%d,\"%s\",\"s\",\"%s\");",leave.getEmployee().getEid() ,Converters.calendar2Str(leave.getDate()),leave.getType(),"pending"));
+			}
+			return true;
+		}catch(SQLException e){
+			return false;
+		}
 	}
 }

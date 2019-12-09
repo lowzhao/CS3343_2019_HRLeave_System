@@ -14,15 +14,13 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
+import util.Converters;
 
 public class PaneTakeLeave extends VBox {
 
-	private TextField usernameField;
-	private TextField passwordField;
-	private TextField preferredNameField;
-	private TextField ageField;
-	private RadioButton isManagerRadio;
-	private RadioButton isSeniorRadio;
+	private TextField leaveTypeField;
+	private TextField startDateField;
+	private TextField endDateField;
 
 	private EventPageHomePage eventPageHomePage = new EventPageHomePage(this);
 	private EventTakeLeave eventTakeLeave = new EventTakeLeave(this);
@@ -69,36 +67,23 @@ public class PaneTakeLeave extends VBox {
 		
 		rightPane.setPadding(new Insets(10,10,10,10));
 		
-		Label usernameLabel = new Label("Start:");
-		this.usernameField = new TextField();
-		rightPane.getChildren().add(usernameLabel);
-		rightPane.getChildren().add(this.usernameField);
+		Label leaveTypeLabel = new Label("Type (annual/sick/no pay):");
+		this.leaveTypeField = new TextField();
+		rightPane.getChildren().add(leaveTypeLabel );
+		rightPane.getChildren().add(this.leaveTypeField);
 
 		// add password
-		Label passwordLabel = new Label("Password:");
-		this.passwordField = new TextField();
-		rightPane.getChildren().add(passwordLabel);
-		rightPane.getChildren().add(this.passwordField);
+		Label startDateLabel = new Label("Start Date (YYYY-mm-dd):");
+		this.startDateField = new TextField();
+		rightPane.getChildren().add(startDateLabel);
+		rightPane.getChildren().add(this.startDateField);
 
 		// add preferred name
-		Label preferredNameLabel = new Label("Preferred name:");
-		this.preferredNameField = new TextField();
-		rightPane.getChildren().add(preferredNameLabel);
-		rightPane.getChildren().add(this.preferredNameField);
+		Label endDateLabel = new Label("End Date (YYYY-mm-dd):");
+		this.endDateField = new TextField();
+		rightPane.getChildren().add(endDateLabel);
+		rightPane.getChildren().add(this.endDateField);
 
-		// add age
-		Label ageLabel = new Label("Age:");
-		this.ageField = new TextField();
-		ageField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-		rightPane.getChildren().add(ageLabel);
-		rightPane.getChildren().add(this.ageField);
-
-		// add isManager
-		this.isManagerRadio = new RadioButton("Are you manager?");
-		rightPane.getChildren().add(this.isManagerRadio);
-		
-		this.isSeniorRadio = new RadioButton("Are you senior employee?");
-		rightPane.getChildren().add(this.isSeniorRadio);
 
 		// add buttons
 		rightPane.getChildren().add(actionButtons());
@@ -111,33 +96,8 @@ public class PaneTakeLeave extends VBox {
 		return panes;
 	}
 
-	public String getUsername() {
-		return usernameField.getText();
-	}
-
-	public String getPassword() {
-		return passwordField.getText();
-	}
-
-	public String getPreferredName() {
-		return preferredNameField.getText();
-	}
-	
-	public int getAge() {
-		// BUG: I have a error of number format exception here  
-		if (ageField.getText().isEmpty()) {
-			return 0;
-		}else {
-			return Integer.parseInt(ageField.getText());
-		}
-	}
-	
-	public boolean getIsManager() {
-		return isManagerRadio.isSelected();
-	}
-	
-	public boolean getIsSenior() {
-		return isSeniorRadio.isSelected();
+	public String getLeaveType() {
+		return leaveTypeField.getText();
 	}
 	
 	public EventPageHomePage getEventPageHomePage() {
@@ -149,11 +109,11 @@ public class PaneTakeLeave extends VBox {
 	}
 	
 	public Calendar getStartDate() {
-		return Calendar.getInstance();
+		return Converters.str2Calendar(this.startDateField.getText());
 	}
 	
 	public Calendar getEndDate() {
-		return Calendar.getInstance();
+		return Converters.str2Calendar(this.endDateField.getText());
 	}
 	
 	

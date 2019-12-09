@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import ui.Presentation;
+import user.Employee;
+import user.Leave;
 import user.User;
 
 public class Frontend extends Thread {
@@ -71,7 +73,6 @@ public class Frontend extends Thread {
 		try {
 			return this.observer.dummy_insert_user(username, password);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -122,6 +123,14 @@ public class Frontend extends Thread {
 	
 	public ArrayList<String> getUserOnLeave(Calendar d) {
 		return this.observer.getUserOnLeave(d);
+	}
+
+	public ArrayList<Leave> getLeaves() {
+		return this.observer.getLeavePending();
+	}
+	
+	public boolean insertLeaves(ArrayList<Calendar> leave_dates, String leaveType) {
+		return this.observer.insertLeave(leave_dates, leaveType, ((Employee)this.currentUser));
 	}
 
 }

@@ -13,7 +13,7 @@ public class EventTakeLeave extends EventBoardcaster {
 	@Override
 	public void handle(ActionEvent event) {
 		PaneTakeLeave n = (PaneTakeLeave) this.n;
-		this.p.takeLeave(n.getStartDate(),n.getEndDate());
+		this.p.takeLeave(n.getStartDate(),n.getEndDate(),n.getLeaveType());
 	}
 
 }

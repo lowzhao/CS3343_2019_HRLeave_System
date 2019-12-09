@@ -9,9 +9,10 @@ import backend.DBConnect;
 import backend.LoginAuthentication;
 import backend.SessionAuthentication;
 import exception.NoResultException;
+import user.Employee;
 import user.JuniorEmployee;
+import user.Leave;
 import user.Manager;
-import user.SeniorEmployee;
 import user.SeniorEmployee;
 import user.User;
 import util.Converters;
@@ -126,10 +127,10 @@ public class Backend {
 		return false;
 
 	}
-	public ArrayList<String> getUserOnLeave(Calendar d) {
+	public ArrayList<String> getUserOnLeave(Calendar d) {  // due to time limitation unable to complete;
 		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("blah");
-		temp.add("blah");
+		temp.add("Bob");
+		temp.add("Annie");
 		return temp;
 	}
 
@@ -137,6 +138,19 @@ public class Backend {
 		boolean authenticated;
 		int eid;
 		String sessionId;
+	}
+
+	public ArrayList<Leave> getLeavePending() {
+		
+		return new ArrayList<Leave>(); 
+	}
+	
+	public boolean insertLeave(ArrayList<Calendar> leaves_date,String leaveType, Employee e) {
+		ArrayList<Leave> leaves = new ArrayList<>();
+		for (Calendar c : leaves_date) {
+			leaves.add(new Leave(0,leaveType, "pending",e, c));
+		}
+		return this.con.insertLeave(leaves);
 	}
 
 	

@@ -115,7 +115,9 @@ public class Presentation extends Application {
 	}
 
 	public void goManageLeavePage() {
-		PaneManageLeave p = new PaneManageLeave();
+		PaneManageLeave p = new PaneManageLeave(
+			this.fe.getLeaves()
+		);
 		p.getEventPageHomePage().setPresentation(this);
 		p.getEventTakeLeave().setPresentation(this);
 		this.ps.setScene(createScene(p));
@@ -185,10 +187,30 @@ public class Presentation extends Application {
 		this.goLoginPage();
 	}
 
-	public void takeLeave(Calendar startDate, Calendar endDate) {
+	public void takeLeave(Calendar startDate, Calendar endDate,String leaveType) {
 		
 		Employee x = ((Employee) this.fe.getCurrUser());
-//		x.applyLeave("annual", 0, startDate, endDate);
+		
+		int leaveTypeInt = 0;
+		switch(leaveType) {
+		case "annual":
+			leaveTypeInt = 2;
+			break;
+		case "sick":
+			leaveTypeInt = 1;
+			break;
+		case "no pay":
+			leaveTypeInt = 3;
+			break;
+		default:
+			return;
+		}
+		
+		if(this.fe.insertLeaves(x.applyLeave(leaveTypeInt, startDate, endDate),leaveType)) {
+			this.alertMessage("Success", "Leaves created");
+		}else {
+			this.alertMessage("Failed", "Leaves failed to create.");
+		}
 	}
 
 //	public void addStackPane(HBox hb) {

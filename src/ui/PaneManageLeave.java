@@ -11,13 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.NumberStringConverter;
 import user.Employee;
+import user.Leave;
 import util.Converters;
 
+
+// WARNING: due to time limitation we are unable to complete this class;
 public class PaneManageLeave extends VBox {
 
 	private TextField usernameField;
@@ -27,17 +28,20 @@ public class PaneManageLeave extends VBox {
 	private RadioButton isManagerRadio;
 	private RadioButton isSeniorRadio;
 	
-	private ArrayList<Employee> es = new ArrayList<>();
-	private ArrayList<Calendar> applyDate = new ArrayList<>();
+	private ArrayList<Leave> leaves = new ArrayList<>();
 	private ArrayList<RadioButton> approved = new ArrayList<>();
 
 	private EventPageHomePage eventPageHomePage = new EventPageHomePage(this);
 	private EventTakeLeave eventTakeLeave = new EventTakeLeave(this);
 
-	public PaneManageLeave() {
+	public PaneManageLeave(
+			ArrayList<Leave> leaves
+			) {
 		this.setAlignment(Pos.TOP_CENTER);
 		this.setSpacing(10);
 		this.setMaxWidth(1000);
+		
+		this.leaves = leaves;
 		
 		this.getChildren().add(add2Pane());
 
@@ -76,36 +80,40 @@ public class PaneManageLeave extends VBox {
 		
 		rightPane.setPadding(new Insets(10,10,10,10));
 		
-		Label usernameLabel = new Label("Start:");
-		this.usernameField = new TextField();
-		rightPane.getChildren().add(usernameLabel);
-		rightPane.getChildren().add(this.usernameField);
-
-		// add password
-		Label passwordLabel = new Label("Password:");
-		this.passwordField = new TextField();
-		rightPane.getChildren().add(passwordLabel);
-		rightPane.getChildren().add(this.passwordField);
-
-		// add preferred name
-		Label preferredNameLabel = new Label("Preferred name:");
-		this.preferredNameField = new TextField();
-		rightPane.getChildren().add(preferredNameLabel);
-		rightPane.getChildren().add(this.preferredNameField);
-
-		// add age
-		Label ageLabel = new Label("Age:");
-		this.ageField = new TextField();
-		ageField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-		rightPane.getChildren().add(ageLabel);
-		rightPane.getChildren().add(this.ageField);
-
-		// add isManager
-		this.isManagerRadio = new RadioButton("Are you manager?");
-		rightPane.getChildren().add(this.isManagerRadio);
+//		Label usernameLabel = new Label("Start:");
+//		this.usernameField = new TextField();
+//		rightPane.getChildren().add(usernameLabel);
+//		rightPane.getChildren().add(this.usernameField);
+//
+//		// add password
+//		Label passwordLabel = new Label("Password:");
+//		this.passwordField = new TextField();
+//		rightPane.getChildren().add(passwordLabel);
+//		rightPane.getChildren().add(this.passwordField);
+//
+//		// add preferred name
+//		Label preferredNameLabel = new Label("Preferred name:");
+//		this.preferredNameField = new TextField();
+//		rightPane.getChildren().add(preferredNameLabel);
+//		rightPane.getChildren().add(this.preferredNameField);
+//
+//		// add age
+//		Label ageLabel = new Label("Age:");
+//		this.ageField = new TextField();
+//		ageField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+//		rightPane.getChildren().add(ageLabel);
+//		rightPane.getChildren().add(this.ageField);
+//
+//		// add isManager
+//		this.isManagerRadio = new RadioButton("Are you manager?");
+//		rightPane.getChildren().add(this.isManagerRadio);
+//		
+//		this.isSeniorRadio = new RadioButton("Are you senior employee?");
+//		rightPane.getChildren().add(this.isSeniorRadio);
 		
-		this.isSeniorRadio = new RadioButton("Are you senior employee?");
-		rightPane.getChildren().add(this.isSeniorRadio);
+		for (Leave l : leaves) {
+			rightPane.getChildren().add(this.addRow(l));
+		}
 
 		// add buttons
 		rightPane.getChildren().add(actionButtons());
@@ -118,7 +126,9 @@ public class PaneManageLeave extends VBox {
 		return panes;
 	}
 	
-	public HBox addRow(Employee u, Calendar d) {
+	public HBox addRow(Leave l) {
+		Employee u = l.getEmployee();
+		Calendar d = l.getDate();
 		HBox row = new HBox();
 		row.setSpacing(10);
 		row.setPadding(new Insets(10,10,10,10));
@@ -132,7 +142,12 @@ public class PaneManageLeave extends VBox {
 		Label dateLabel = new Label (Converters.calendar2Str(d));
 		row.getChildren().add(dateLabel);
 		
-//		RadioButton
+		Label leaveType = new Label (l.getType());
+		row.getChildren().add(leaveType);
+		
+		RadioButton ticktickRadio = new RadioButton("approve");
+		row.getChildren().add(ticktickRadio);
+		this.approved.add(ticktickRadio);
 		
 		return row;
 	}
