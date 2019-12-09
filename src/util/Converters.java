@@ -54,4 +54,8 @@ public class Converters {
 		return cal;
 	}
 	
+	public static boolean str2Bool(String str) {
+		return str == "1";
+	}
+	
 }
