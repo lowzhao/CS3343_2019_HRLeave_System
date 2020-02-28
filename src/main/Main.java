@@ -14,13 +14,10 @@ public class Main{
 		Backend backend = Backend.getInstance();
 		Frontend frontend = Frontend.getInstance();
 		frontend.start();
-//		;
+		frontend.addObserver(backend);
+		
 		System.out.println("Done");
 		
-		
-//		frontend.start();
-		
-		frontend.addObserver(backend);
 		
 //		test_input();
 		
