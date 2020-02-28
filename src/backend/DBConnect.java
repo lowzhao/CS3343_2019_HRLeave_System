@@ -1,15 +1,16 @@
 package backend;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import exception.NoResultException;
+import user.Leave;
+import util.Converters;
 
 public class DBConnect {
 	
@@ -42,7 +43,10 @@ public class DBConnect {
 		}
 	}
 
-	private ArrayList<String[]> executeAndFetch(String sql,String[] responseOrders) throws SQLException {
+	private ArrayList<String[]> executeAndFetch(String sql, String[] responseOrders) throws SQLException {
+		/*
+		 * responseOrders: array of strings to organise the order of the columns
+		 * */
 		try {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(sql);
@@ -75,14 +79,72 @@ public class DBConnect {
 		}
 	}
 	
-	public void insertUser(String name, Date dateJoined, String username, BigInteger salt, BigInteger password,boolean isManager) throws SQLException {
-		Statement st = con.createStatement();
-		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager) VALUES (\"%s\",\"%s\",\"%s\",%d,%d, %b);",name ,Date2Str(dateJoined), username,salt, password,isManager));
+	public String getUserEid(String username) throws SQLException, NoResultException {
+		try {
+			return this.executeAndFetch(
+					String.format("SELECT eid FROM Employee WHERE username=\"%s\";", username),
+					new String[] {"eid"}
+					
+			).get(0)[0];
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e);
+			throw new NoResultException("User don't exist.");
+		}
 	}
 	
-	public static String Date2Str(Date d) {
-		
-		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
-		return sdformat.format(d);
+	public void insertUser(String name, Calendar dateJoined, String username, String salt, String password,boolean isManager, boolean isSenior) throws SQLException {
+		Statement st = con.createStatement();
+		st.executeUpdate(String.format("INSERT INTO Employee (name, dateJoined, username, salt, password,isManager,isSenior) VALUES (\"%s\",\"%s\",\"%s\",\"%s\",\"%s\", %b, %b);",name ,Converters.calendar2Str(dateJoined), username,salt, password,isManager,isSenior));
+	}
+	
+	public void insertSession(int eid, String sid, Calendar expiry_date) throws SQLException {
+		Statement st = con.createStatement();
+		st.executeUpdate(String.format("INSERT INTO Session VALUES (%d,\"%s\",\"%s\");",eid ,sid,Converters.calendar2Str(expiry_date)));
+	}
+	
+	public ArrayList<String[]> getUserSessionInfo(int eid) throws SQLException {
+		Statement st = con.createStatement();
+		return this.executeAndFetch(String.format("SELECT sid, expiry FROM Session WHERE eid=%d;", eid),new String[] {"sid","expiry"});
+	}
+
+	public void removeSession(String sid) throws SQLException {
+		Statement st = con.createStatement();
+		st.executeUpdate(String.format("DELETE FROM Session WHERE sid=\"%s\";", sid));
+	}
+	
+	public Object[] getUser(int eid) throws SQLException, NoResultException{
+		try {
+			String[] rawRes = this.executeAndFetch(
+					String.format("SELECT name, age, dateJoined, username, isManager, isSenior FROM Employee WHERE eid=%s;", eid),
+					new String[] {"name","age","dateJoined","username","isManager", "isSenior"}
+			).get(0);
+			return new Object[]{ 
+					rawRes[0], 
+					Integer.parseInt(rawRes[1]), 
+					Converters.str2Calendar(rawRes[2]), 
+					rawRes[3], 
+					Converters.str2Bool(rawRes[4])  ,
+					Converters.str2Bool(rawRes[5])
+				};
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e);
+			throw new NoResultException("User don't exist.");
+		}
+	}
+
+	public int getAnnualLeaveCount() {
+		return 0;
+	}
+	
+	public boolean insertLeave(ArrayList<Leave> leaves) {
+		try {
+			for (Leave leave : leaves) {
+				Statement st = con.createStatement();
+				st.executeUpdate(String.format("INSERT INTO onLeave (eid, leave_date, leave_type, type)  VALUES (%d,\"%s\",\"s\",\"%s\");",leave.getEmployee().getEid() ,Converters.calendar2Str(leave.getDate()),leave.getType(),"pending"));
+			}
+			return true;
+		}catch(SQLException e){
+			return false;
+		}
 	}
 }

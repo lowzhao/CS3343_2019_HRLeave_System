@@ -1,9 +1,6 @@
 package department;
 
-public abstract class Department {
-	private int totalEmploy;
-	
-	public int getTotalEmploy() {
-		return this.totalEmploy;
-	}
+// WARNING: due to time limitation unable to complete this class;
+public class Department {
+
 }

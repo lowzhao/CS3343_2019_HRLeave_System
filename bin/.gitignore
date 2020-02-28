@@ -24,3 +24,6 @@ hs_err_pid*
 /main/
 /stub/
 /user/
+/backend/
+/ui/
+/main/

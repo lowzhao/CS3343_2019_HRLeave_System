@@ -1,11 +1,11 @@
 package backend;
 
-import java.math.BigInteger;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
 import exception.NoResultException;
+import util.Converters;
 import util.HashingCalculator;
 
 public class LoginAuthentication implements Authentication {
@@ -14,34 +14,25 @@ public class LoginAuthentication implements Authentication {
 	private String password;
 	
 	private DBConnect con;
-	
-	public LoginAuthentication(
-		String username,
-		String password,
-		DBConnect con
-	) {
+
+	public LoginAuthentication(String username, String password, DBConnect con) {
 		this.username = username;
 		this.password = password;
 		this.con = con;
 	}
-	
+
 	@Override
 	public boolean authenticate() throws SQLException {
 		try {
 			String[] authInfo = this.con.getUserAuthInfo(username);
-			byte[] passwordHashed = new BigInteger(authInfo[0]).toByteArray();
-			byte[] salt = new BigInteger(authInfo[1]).toByteArray();
-			
+			byte[] passwordHashed = Converters.hexToBytes(authInfo[0]);
+			byte[] salt = Converters.hexToBytes(authInfo[1]);
+
 			byte[] inputHashed = HashingCalculator.genHash(this.password, salt);
 			return Arrays.equals(inputHashed, passwordHashed);
-		}catch (NoResultException e) {
-			System.out.println(e);
-			return false;
-		} catch(InvalidKeySpecException e) {
+		} catch (NoResultException e) {
 			System.out.println(e);
 			return false;
 		}
 	}
-	
-	
 }
